@@ -4,7 +4,7 @@ FROM python:3.9-slim
 
 EXPOSE 8501
 
-WORKDIR /Personal_Accountant
+WORKDIR /El_Contador
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/streamlit/streamlit-example.git .
+RUN git clone https://github.com/Bonorinoa/El_Contador.git .
 
 RUN pip3 install -r requirements.txt
 
