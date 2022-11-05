@@ -78,3 +78,4 @@ except:
 
 clean_budget = updated_budget.loc[:, ~updated_budget.columns.str.contains('^Unnamed')]
 st.dataframe(clean_budget)
+print("Some new")
