@@ -51,7 +51,7 @@ Category, Cost = lastMSg.split(':')
 current_time = datetime.datetime.now()
 
 data_entry = {"Date":[current_time], "Category": [Category], "Cost": [float(Cost.replace(",", "."))]}
-print(f'Data Entry: {data_entry}')
+st.write(f'Data Entry: {data_entry}')
 
 #--------------------------------------------------------------------------------
 # FINANCES SPREADSHEET
@@ -60,22 +60,12 @@ import numpy as np
 
 message_df = pd.DataFrame(data_entry)
 
-try:
-    print("Welcome back!")
-    budget = pd.read_csv("C:\\Users\\Bonoc\\Documents\\GitHub\\Personal_Accountant\\Contadurias.csv")
-    updated_budget = budget.append(message_df, ignore_index=True)
-    print(budget)
-    print(updated_budget)
-    
-    updated_budget.to_csv(f"Contadurias.csv")
-except:
-    print("Creating new csv...")
-    message_df.to_csv(f"Contadurias.csv")
-    updated_budget = message_df
-    
+st.write("Welcome back!")
+budget = pd.read_csv("C:\\Users\\Bonoc\\Documents\\GitHub\\Personal_Accountant\\El_Contador\\Contadurias.csv")
+updated_budget = pd.concat([budget, message_df], ignore_index=True)
+st.write(updated_budget)
 #--------------------------------------------------------------------------------
 # STREAMLIT DASHBOARD [END]
 
 clean_budget = updated_budget.loc[:, ~updated_budget.columns.str.contains('^Unnamed')]
 st.dataframe(clean_budget)
-print("Some new")

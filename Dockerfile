@@ -1,4 +1,4 @@
-# app/Dockerfile
+# El_Contador/Dockerfile
 
 FROM python:3.9-slim
 
@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/Bonorinoa/El_Contador.git .
+COPY . .
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install twilio pandas streamlit
 
 ENTRYPOINT ["streamlit", "run", "Personal_Accountant.py", "--server.port=8501", "--server.address=0.0.0.0"]
