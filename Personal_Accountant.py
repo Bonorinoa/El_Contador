@@ -20,6 +20,7 @@ os.environ["TWILIO_AUTH_TOKEN"] = TWILIO_AUTH_TOKEN
 #------------------------------------------------------------------------------
 # STREAMLIT DASHBOARD [START]
 import streamlit as st
+import pandas as pd
 
 st.title('My Finances')
 
@@ -54,25 +55,28 @@ current_time = datetime.datetime.now()
 # Categroy: Category of transaction
 # Value: Monetary value of transaction
 # Type: Debit (+) or Credit (-)
-data_entry = {"Date":[current_time], 
-              "Category": [Category], 
-              "Value": [float(Cost.replace(",", "."))],
-              "Type": [TypeTr]}
-st.write(f'Data Entry: {data_entry}')
+data_entry = {"Date": current_time, 
+              "Category": Category, 
+              "Value": float(Cost.replace(",", ".")),
+              "Type": TypeTr}
 
 #--------------------------------------------------------------------------------
 # FINANCES SPREADSHEET
-import pandas as pd
 import numpy as np
+import csv
 
-message_df = pd.DataFrame(data_entry)
+with open("Contadurias.csv", "a") as f:
+    colnames = ["Date", "Category", "Value", "Type"]
+    current_budget = csv.DictWriter(f, colnames)
+    
+    st.write("Latest entry: ")
+    st.write(data_entry)
 
-st.write("Welcome back!")
+    st.write("Welcome back!")
 
-
-  
+    current_budget.writerow(data_entry)
+ 
 #--------------------------------------------------------------------------------
 # STREAMLIT DASHBOARD [END]
-
-clean_budget = message_df.loc[:, ~message_df.columns.str.contains('^Unnamed')]
-st.dataframe(clean_budget)
+updated_budget = pd.read_csv("Contadurias.csv")
+st.write(updated_budget)
