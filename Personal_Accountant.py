@@ -71,6 +71,7 @@ try:
 except:
     print("Creating new csv...")
     message_df.to_csv(f"Contadurias.csv")
+    updated_budget = message_df
     
 #--------------------------------------------------------------------------------
 # STREAMLIT DASHBOARD [END]
