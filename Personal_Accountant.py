@@ -47,10 +47,17 @@ messages = client.messages.list(limit=3)
 
 lastMSg = messages[1].body
 
-Category, Cost = lastMSg.split(':')
+Category, Cost, TypeTr = lastMSg.split(" ")
 current_time = datetime.datetime.now()
 
-data_entry = {"Date":[current_time], "Category": [Category], "Cost": [float(Cost.replace(",", "."))]}
+# Date: Date of input entry
+# Categroy: Category of transaction
+# Value: Monetary value of transaction
+# Type: Debit (+) or Credit (-)
+data_entry = {"Date":[current_time], 
+              "Category": [Category], 
+              "Value": [float(Cost.replace(",", "."))],
+              "Type": [TypeTr]}
 st.write(f'Data Entry: {data_entry}')
 
 #--------------------------------------------------------------------------------
@@ -61,11 +68,11 @@ import numpy as np
 message_df = pd.DataFrame(data_entry)
 
 st.write("Welcome back!")
-budget = pd.read_csv("C:\\Users\\Bonoc\\Documents\\GitHub\\Personal_Accountant\\El_Contador\\Contadurias.csv")
-updated_budget = pd.concat([budget, message_df], ignore_index=True)
-st.write(updated_budget)
+
+
+  
 #--------------------------------------------------------------------------------
 # STREAMLIT DASHBOARD [END]
 
-clean_budget = updated_budget.loc[:, ~updated_budget.columns.str.contains('^Unnamed')]
+clean_budget = message_df.loc[:, ~message_df.columns.str.contains('^Unnamed')]
 st.dataframe(clean_budget)
