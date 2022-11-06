@@ -1,4 +1,6 @@
 # Personal Accountant
+# Dependencies: Streamlit (Dashboard, server)
+
 
 # DONE: 1) Set up container or virtual environment
 # DONE: 2) Find a way to connect via SMS or WhatsApp (Twilio [https://console.twilio.com/?frameUrl=%2Fconsole%3Fx-target-region%3Dus1])
@@ -8,75 +10,40 @@
 # TODO: 6) Improve streamlit's interface.
 
 
-# Dependencies: Streamlit (Dashboard, server), Twilio (Phone number creation and SMS reading), 
-import os
-
-TWILIO_ACCOUNT_SID = "AC1dc24948a97469cbfe31a00155658764"
-TWILIO_AUTH_TOKEN = "1115e0f1268d623c444322394c8e78ba"
-
-os.environ["TWILIO_ACCOUNT_SID"] = TWILIO_ACCOUNT_SID
-os.environ["TWILIO_AUTH_TOKEN"] = TWILIO_AUTH_TOKEN
-
 #------------------------------------------------------------------------------
 # STREAMLIT DASHBOARD [START]
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+from update_budget import get_last_text, create_database, update_database
 
 st.title('My Finances')
 
-
-
-#------------------------------------------------------------------------------
-
-# Download the helper library from https://www.twilio.com/docs/python/install
-from twilio.rest import Client
-import datetime
-import time
-
-# Find your Account SID and Auth Token in Account Info and set the environment variables.
-# See http://twil.io/secure
-account_sid = os.environ['TWILIO_ACCOUNT_SID']
-auth_token = os.environ['TWILIO_AUTH_TOKEN']
-client = Client(account_sid, auth_token)
-
-## To send message
-#message = client.messages.create(body='Wassap madafaka', 
-#                                 from_='+16075243807', 
-#                                 to='+17189023213')
-
-messages = client.messages.list(limit=3)
-
-lastMSg = messages[1].body
-
-Category, Cost, TypeTr = lastMSg.split(" ")
-current_time = datetime.datetime.now()
-
-# Date: Date of input entry
-# Categroy: Category of transaction
-# Value: Monetary value of transaction
-# Type: Debit (+) or Credit (-)
-data_entry = {"Date": current_time, 
-              "Category": Category, 
-              "Value": float(Cost.replace(",", ".")),
-              "Type": TypeTr}
-
-#--------------------------------------------------------------------------------
-# FINANCES SPREADSHEET
-import numpy as np
-import csv
-
-with open("Contadurias.csv", "a") as f:
-    colnames = ["Date", "Category", "Value", "Type"]
-    current_budget = csv.DictWriter(f, colnames)
+# To avoid re-reading database
+if 'Read' not in st.session_state:
+    st.session_state['Read'] = False
     
-    st.write("Latest entry: ")
-    st.write(data_entry)
-
-    st.write("Welcome back!")
-
-    current_budget.writerow(data_entry)
- 
+    
+    
 #--------------------------------------------------------------------------------
 # STREAMLIT DASHBOARD [END]
-updated_budget = pd.read_csv("Contadurias.csv")
-st.write(updated_budget)
+
+st.write(get_last_text())
+
+# Create or initialize database
+new_df = create_database("Contadurias.csv")
+st.write(new_df)
+
+
+
+# Update database.
+# This should trigger when message comes in
+updated_df = update_database("Contadurias.csv")
+st.write(updated_df)
+
+
+# PLot updated distribution of values
+fig, ax = plt.subplots()
+ax.hist(updated_df['Value'], bins=20)
+
+st.pyplot(fig)
