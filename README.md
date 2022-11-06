@@ -1,2 +1,2 @@
 # El_Contador
- Personal accountant connected to SMS, streamlit and dockerized
+ Personal accountant that receives updates via SMS, and hosts streamlit dashboard
