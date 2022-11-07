@@ -17,7 +17,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from update_budget import get_last_text, create_database, update_database
 
-st.title('My Finances')
+st.title('El Contador: Mainframe')
 
 # To avoid re-reading database
 if 'Read' not in st.session_state:
@@ -26,24 +26,35 @@ if 'Read' not in st.session_state:
     
     
 #--------------------------------------------------------------------------------
-# STREAMLIT DASHBOARD [END]
-
+# STREAMLIT DASHBOARD [Page 1]
+st.write("Latest message:")
 st.write(get_last_text())
 
-# Create or initialize database
-new_df = create_database("Contadurias.csv")
-st.write(new_df)
+with st.form("create_budget_form"):
+    ## Create or initialize database
+    new_df = create_database("Contadurias.csv")
+    
+    # Every form must have a submit button.
+    created = st.form_submit_button("Create Database")
+    if created:
+        st.write("New Database", new_df)
+    
+with st.form("show_budget_form"):
+    current_budget = pd.read_csv("Contadurias.csv")
 
+    # Every form must have a submit button.
+    show = st.form_submit_button("Show Current Budget")
+    if show:
+        st.write("Current Budget", current_budget)
 
+with st.form("update_budget_form"):
+    # Update database.
+    # This should trigger when message comes in
+    updated_df = update_database("Contadurias.csv")
+    
+    # Every form must have a submit button.
+    updated = st.form_submit_button("Updated")
+    if updated:
+        st.write("Updated Database", updated_df)
 
-# Update database.
-# This should trigger when message comes in
-updated_df = update_database("Contadurias.csv")
-st.write(updated_df)
-
-
-# PLot updated distribution of values
-fig, ax = plt.subplots()
-ax.hist(updated_df['Value'], bins=20)
-
-st.pyplot(fig)
+#--------------------------------------------------------------------------------
