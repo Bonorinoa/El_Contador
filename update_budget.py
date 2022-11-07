@@ -72,20 +72,17 @@ def update_database(filename):
     ''' Just boring csv for now
     '''
 
-    with open(filename, 'w') as new_db:
+    #with open(filename, 'a') as old_db:
         
-        writer = csv.DictWriter(new_db, fieldnames=('Date', 'Category', 'Value', 'Type'))
-        writer.writeheader()
-        writer.writerow(parse_sms.get_message())
+    #    writer = csv.writer(old_db)
+    #    writer.writerow(data_df.values)
 
-        # give sserver time to process
-        time.sleep(10)
 
-    message_df = pd.read_csv(filename)
+    #message_df = pd.read_csv(filename)
     
-    updated_df = pd.concat([message_df, data_df], ignore_index=True)
+    #updated_df = pd.concat([message_df, data_df], ignore_index=True)
     
-    updated_df.to_csv(filename)
+    data_df.to_csv(filename, mode='a', header=False, index=False)
     
     new_db = pd.read_csv(filename)
     
