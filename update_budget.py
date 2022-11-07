@@ -1,7 +1,9 @@
 # FINANCES SPREADSHEET
+import streamlit as st
 import pandas as pd
 import numpy as np
 import csv
+import time
 import parse_sms
 
 '''
@@ -43,14 +45,41 @@ def create_database(filename):
     with open(filename, 'w') as new_db:
         writer = csv.DictWriter(new_db, fieldnames=('Date', 'Category', 'Value', 'Type'))
         writer.writeheader()
-        writer.writerow(data_entry)
+        writer.writerow(parse_sms.get_message())
         
     return "Created!"
+
+def show_database(filename):
+    '''Show the Current Budget
+    '''
+    with open(filename, mode='r') as budget:
+        csv_reader = csv.DictReader(budget)
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print(f'Column names are {", ".join(row)}')
+                line_count += 1
+            st.write(f'\tSpent {row["Value"]} on {row["Date"]} for {row["Category"]}.')
+            line_count += 1
+        print(f'Processed {line_count} lines.')
+        
+        clean_budget = budget.loc[:, ~budget.columns.str.contains('^Unnamed')]
+    
+    return clean_budget
 
 def update_database(filename):
     
     ''' Just boring csv for now
     '''
+
+    with open(filename, 'w') as new_db:
+        
+        writer = csv.DictWriter(new_db, fieldnames=('Date', 'Category', 'Value', 'Type'))
+        writer.writeheader()
+        writer.writerow(parse_sms.get_message())
+
+        # give sserver time to process
+        time.sleep(10)
 
     message_df = pd.read_csv(filename)
     
