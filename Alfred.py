@@ -15,7 +15,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from update_budget import get_last_text, create_database, update_database
+from update_budget import get_last_text, create_database, update_database, show_database
 
 st.title('El Contador: Mainframe')
 
@@ -40,12 +40,12 @@ with st.form("create_budget_form"):
         st.write("New Database", new_df)
     
 with st.form("show_budget_form"):
-    current_budget = pd.read_csv("Contadurias.csv")
+    current_budget = show_database("Contadurias.csv")
 
     # Every form must have a submit button.
     show = st.form_submit_button("Show Current Budget")
     if show:
-        st.write("Current Budget", current_budget)
+        st.write("Current Budget \n", current_budget)
 
 with st.form("update_budget_form"):
     # Update database.
