@@ -57,15 +57,13 @@ def show_database(filename):
         line_count = 0
         for row in csv_reader:
             if line_count == 0:
-                print(f'Column names are {", ".join(row)}')
+                res = (f'Column names are: {", ".join(row)}')
                 line_count += 1
-            st.write(f'\tSpent {row["Value"]} on {row["Date"]} for {row["Category"]}.')
+            res += (f'Spent {row["Value"]} on {row["Date"]} for {row["Category"]}.')
             line_count += 1
-        print(f'Processed {line_count} lines.')
-        
-        clean_budget = budget.loc[:, ~budget.columns.str.contains('^Unnamed')]
+        res += (f'\nProcessed {line_count} lines.')
     
-    return clean_budget
+    return res
 
 def update_database(filename):
     
