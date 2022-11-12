@@ -32,9 +32,9 @@ with form:
         min_value=0.1, 
         max_value=0.9,
         help="Lower values generate more “predictable” output, higher values generate more “creative” output")  
+      
   # Submit button to start generating ideas
   generate_button = form.form_submit_button("Generate Idea")
-
   if generate_button:
     if topic_input == "":
       st.error("Don't forget to specify a topic!")
