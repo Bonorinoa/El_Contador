@@ -15,13 +15,14 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from update_budget import get_last_text, create_database, update_database, show_database
+from update_budget import *
+from utils import *
 
 st.title('El Contador: Mainframe')
 
 # To avoid re-reading database
-if 'Read' not in st.session_state:
-    st.session_state['Read'] = False
+if 'Notes' not in st.session_state:
+    st.session_state['Notes'] = []
     
     
     
@@ -30,31 +31,45 @@ if 'Read' not in st.session_state:
 st.write("Latest message:")
 st.write(get_last_text())
 
-with st.form("create_budget_form"):
-    ## Create or initialize database
-    new_df = create_database("Contadurias.csv")
+## NOTE TAKING FEATURE
+note = get_last_text()
     
-    # Every form must have a submit button.
-    created = st.form_submit_button("Create Database")
-    if created:
-        st.write("New Database", new_df)
-    
-with st.form("show_budget_form"):
-    current_budget = show_database("Contadurias.csv")
+st.write("Notes on database: ")
+st.write(note['Note'])
 
-    # Every form must have a submit button.
-    show = st.form_submit_button("Show Current Budget")
-    if show:
-        st.write("Current Budget \n", current_budget)
 
-with st.form("update_budget_form"):
-    # Update database.
-    # This should trigger when message comes in
-    updated_df = update_database("Contadurias.csv")
+#### CREATE JSON DB
+
+
+#st.session_state['Notes'].append(note['Note'])
+print(update_database(note))
+
+## INVOICES FEATURE ON MAINTAINANCE
+# with st.form("create_budget_form"):
+#     ## Create or initialize database
+#     new_df = create_database("Contadurias.csv")
     
-    # Every form must have a submit button.
-    updated = st.form_submit_button("Updated")
-    if updated:
-        st.write("Updated Database", updated_df)
+#     # Every form must have a submit button.
+#     created = st.form_submit_button("Create Database")
+#     if created:
+#         st.write("New Database", new_df)
+    
+# with st.form("show_budget_form"):
+#     current_budget = show_database("Contadurias.csv")
+
+#     # Every form must have a submit button.
+#     show = st.form_submit_button("Show Current Budget")
+#     if show:
+#         st.write("Current Budget \n", current_budget)
+
+# with st.form("update_budget_form"):
+#     # Update database.
+#     # This should trigger when message comes in
+#     updated_df = update_database("Contadurias.csv")
+    
+#     # Every form must have a submit button.
+#     updated = st.form_submit_button("Updated")
+#     if updated:
+#         st.write("Updated Database", updated_df)
 
 #--------------------------------------------------------------------------------

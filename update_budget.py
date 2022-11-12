@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import json
 import csv
 import time
 import parse_sms
@@ -32,9 +33,10 @@ data_df = pd.DataFrame(data_entry, index=[0])
 
 def get_last_text():
      
-    '''Returns a dictionary with the text infor
     '''
-    
+    Returns a dictionary with the SMS information
+    '''
+     
     return data_entry
 
 def create_database(filename):
@@ -65,7 +67,23 @@ def show_database(filename):
     
     return res
 
-def update_database(filename):
+def update_database(data_entry, notes=True):
+    
+    '''
+     Updates JSON database of notes
+    '''
+    if notes == True:
+        notes_db ="notes_db.json"
+        
+        with open(notes_db, "r+") as jsonFile:
+            data = json.load(jsonFile)
+            
+            json.dump(data, jsonFile, default=str)
+        
+    return "Notes Database Updated!"
+
+
+def update_invoices(filename):
     
     ''' Just boring csv for now
     '''
